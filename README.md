@@ -1,32 +1,70 @@
-# React + TypeScript + Vite
+# IslaSafe Admin Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The IslaSafe Admin Web App is a React and TypeScript dashboard for monitoring SOS requests, incidents, hazard-map information, evacuation centers, advisories, residents, and weather conditions.
 
-Currently, two official plugins are available:
+## Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Install the following before running the frontend:
 
-## React Compiler
+- [Node.js](https://nodejs.org/) 20 or later
+- npm (included with Node.js)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Install dependencies
 
-## Expanding the Oxlint configuration
+Open a terminal in the `frontend` folder, then install the packages declared in `package.json`:
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+This installs the main application dependencies:
+
+- React and React DOM
+- Vite and TypeScript
+- Tailwind CSS
+- Leaflet and React Leaflet for map views
+- Lucide React for icons
+- Oxlint for linting
+
+## Run the app locally
+
+From the `frontend` folder, start the Vite development server:
+
+```bash
+npm run dev
+```
+
+Vite will print the local URL in the terminal, typically `http://localhost:5173`.
+
+If PowerShell prevents `npm` scripts from running, use the Windows command wrapper instead:
+
+```powershell
+npm.cmd run dev
+```
+
+## Available commands
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Starts the local development server with hot reload. |
+| `npm run build` | Type-checks the project and creates a production build in `dist/`. |
+| `npm run preview` | Serves the latest production build locally. |
+| `npm run lint` | Runs Oxlint checks. |
+
+For PowerShell environments with script-execution restrictions, replace `npm` with `npm.cmd` in the commands above.
+
+## Project structure
+
+```text
+frontend/
+├── src/
+│   ├── components/        # Shared application layout and UI primitives
+│   ├── features/          # Feature-based pages, components, and data
+│   ├── assets/            # Static frontend assets
+│   ├── App.tsx            # Application entry layout and page routing
+│   └── main.tsx           # React bootstrap file
+├── package.json           # Scripts and frontend dependencies
+└── vite.config.ts         # Vite configuration
+```
+
+See [the feature directory guide](src/features/README.md) for the location and purpose of each feature module.

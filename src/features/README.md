@@ -2,6 +2,8 @@
 
 Each feature owns its page, feature-specific components, and local mock data. Shared elements remain outside feature folders only when they are used by multiple features.
 
+For dependency installation and commands to run the frontend, see the [frontend setup guide](../../README.md).
+
 | Feature | Purpose |
 | --- | --- |
 | `auth` | Sign-in, sign-up, and the cinematic entry animation. |
