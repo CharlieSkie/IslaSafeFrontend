@@ -38,7 +38,7 @@ export function SosManagementPage({ requests, selectedRequestId, onClearSelected
         <div><h2 className="font-display text-sm font-semibold text-slate-100">SOS request queue</h2><p className="mt-1 text-xs text-slate-500">{visibleRequests.length} {visibleRequests.length === 1 ? 'request' : 'requests'} shown</p></div>
         <p className="text-[11px] text-slate-500">Select a request to review the resident details.</p>
       </div>
-      <TableFrame ariaLabel="SOS request queue" className="data-table--comfortable data-table--modern data-table--readable data-table--soft-corners mx-auto max-w-[1320px]" tableClassName="min-w-[1080px] table-fixed">
+      <TableFrame ariaLabel="SOS request queue" className="data-table--comfortable data-table--modern data-table--readable data-table--soft-corners data-table--scrollable mx-auto max-w-[1320px]" tableClassName="min-w-[1080px] table-fixed">
         <caption className="sr-only">SOS requests from residents</caption>
         <colgroup><col className="w-[132px]" /><col className="w-[205px]" /><col className="w-[185px]" /><col className="w-[175px]" /><col className="w-[110px]" /><col className="w-[120px]" /><col className="w-[126px]" /><col className="w-[132px]" /></colgroup>
         <thead className="portal-table"><tr><th>SOS ID</th><th>Resident</th><th>Barangay / Purok</th><th>Request</th><th>Priority</th><th>Time</th><th>Status</th><th className="data-table__action text-right">Action</th></tr></thead>

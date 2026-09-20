@@ -3,6 +3,7 @@ import type { LatLngBoundsExpression, LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Circle, CircleMarker, MapContainer, Polyline, TileLayer, Tooltip, ZoomControl, useMap } from 'react-leaflet'
 import { Crosshair, MapPinned, Minimize2, Satellite } from 'lucide-react'
+import { environment } from '../../../config/environment'
 import { mapLayers, urbanHazards, type MapLayerKey, type UrbanHazard } from '../data/mapLayers'
 
 // President Carlos P. Garcia is centred on Lapinig Island, Bohol.
@@ -21,14 +22,14 @@ const barangayViews: Record<string, { center: LatLngExpression; zoom: number }> 
 
 const basemaps = {
   map: {
-    attribution: '&copy; OpenStreetMap contributors',
+    attribution: environment.map.streetAttribution,
     label: 'Map',
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    url: environment.map.streetTileUrl,
   },
   satellite: {
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community',
+    attribution: environment.map.attribution,
     label: 'Satellite',
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    url: environment.map.tileUrl,
   },
 } as const
 
@@ -96,9 +97,9 @@ export function LiveMap({ full = false, fullScreen = false, visibleLayers = [], 
   const selectedBasemap = basemaps[basemap]
   return (
     <div className={`relative overflow-hidden bg-[#07101d] ${fullScreen ? 'h-screen' : `rounded-xl border border-white/10 ${full ? 'h-[600px] min-h-[460px]' : 'h-[370px]'}`}`}>
-      <MapContainer center={pitogo} className="islasafe-map h-full w-full" fadeAnimation={false} markerZoomAnimation={false} maxBounds={cpgNavigationBounds} maxBoundsViscosity={0.25} maxZoom={19} minZoom={minimumMapZoom} scrollWheelZoom zoom={cpgOverviewZoom} zoomAnimation={false} zoomControl={false}>
+      <MapContainer center={pitogo} className="islasafe-map h-full w-full" fadeAnimation={false} markerZoomAnimation={false} maxBounds={cpgNavigationBounds} maxBoundsViscosity={0.25} maxZoom={environment.map.maxZoom} minZoom={minimumMapZoom} scrollWheelZoom zoom={cpgOverviewZoom} zoomAnimation={false} zoomControl={false}>
         <MapView barangay={barangay} />
-        <TileLayer attribution={selectedBasemap.attribution} key={basemap} maxZoom={19} url={selectedBasemap.url} />
+        <TileLayer attribution={selectedBasemap.attribution} key={basemap} maxZoom={environment.map.maxZoom} url={selectedBasemap.url} />
         <ZoomControl position="bottomright" />
 
         {full && active('barangays') && barangayLabels.map((barangayLabel) => <CircleMarker center={barangayLabel.position} interactive={false} key={barangayLabel.name} pathOptions={{ opacity: 0, fillOpacity: 0 }} radius={1}><Tooltip className="barangay-label" direction="center" opacity={1} permanent>{barangayLabel.name}</Tooltip></CircleMarker>)}

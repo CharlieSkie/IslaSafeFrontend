@@ -26,6 +26,28 @@ This installs the main application dependencies:
 - Lucide React for icons
 - Oxlint for linting
 
+## Environment configuration
+
+Copy `.env.example` to `.env` before connecting the frontend to external services. The local `.env` file is ignored by Git.
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Set the required values in `.env`:
+
+| Variable | Purpose |
+| --- | --- |
+| `VITE_API_BASE_URL` | Base URL for the backend API. |
+| `VITE_API_TIMEOUT_MS` | API request timeout in milliseconds. |
+| `VITE_MAP_TILE_URL` | Primary/satellite map tile URL. |
+| `VITE_MAP_STREETS_TILE_URL` | Street-map tile URL used by location detail maps. |
+| `VITE_MAP_API_KEY` | Browser-restricted map key, when required by the chosen provider. |
+| `VITE_MAP_ATTRIBUTION` | Attribution for the primary map tiles. |
+| `VITE_MAP_STREETS_ATTRIBUTION` | Attribution for street-map tiles. |
+
+All frontend configuration is read through `src/config/environment.ts`. Do not place private backend secrets in `VITE_*` variables because Vite exposes them in the browser bundle.
+
 ## Run the app locally
 
 From the `frontend` folder, start the Vite development server:

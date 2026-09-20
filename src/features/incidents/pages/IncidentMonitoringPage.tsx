@@ -32,7 +32,7 @@ export function IncidentMonitoringPage() {
         <div><h2 className="font-display text-sm font-semibold text-slate-100">Incident register</h2><p className="mt-1 text-xs text-slate-500">{currentIncidents.length} current &middot; {previousIncidents.length} previous</p></div>
         <p className="text-[11px] text-slate-500">Current incidents are listed before archived records.</p>
       </div>
-      <TableFrame ariaLabel="Incident register" className="data-table--comfortable data-table--modern data-table--readable data-table--soft-corners mx-auto max-w-[1320px]" tableClassName="min-w-[1060px] table-fixed">
+      <TableFrame ariaLabel="Incident register" className="data-table--comfortable data-table--modern data-table--readable data-table--soft-corners data-table--scrollable mx-auto max-w-[1320px]" tableClassName="min-w-[1060px] table-fixed">
         <caption className="sr-only">Current and previous incident records</caption>
         <colgroup><col className="w-[112px]" /><col className="w-[165px]" /><col className="w-[190px]" /><col className="w-[120px]" /><col className="w-[138px]" /><col className="w-[126px]" /><col className="w-[160px]" /><col className="w-[78px]" /></colgroup>
         <thead className="portal-table"><tr><th>ID</th><th>Incident type</th><th>Location</th><th>Severity</th><th>Reported</th><th>Status</th><th>Affected</th><th className="data-table__action text-right">Action</th></tr></thead>
