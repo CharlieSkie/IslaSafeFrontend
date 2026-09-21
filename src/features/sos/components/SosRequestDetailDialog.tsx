@@ -1,9 +1,16 @@
-import { useEffect } from 'react'
-import 'leaflet/dist/leaflet.css'
-import { CircleMarker, MapContainer, TileLayer, Tooltip } from 'react-leaflet'
+import { useEffect, useRef, useState } from 'react'
+import * as maplibregl from 'maplibre-gl'
 import { AlignLeft, Clock3, Flag, MapPin, Phone, UserRound, X } from 'lucide-react'
 import { environment } from '../../../config/environment'
+import { BasemapToggle, MapZoomControls, type BasemapKey } from '../../shared/components/BasemapToggle'
+import { createRasterStyle, setGeoJsonData, toLngLat, updateRasterTiles } from '../../shared/utils/maplibre'
 import type { SosRequest, SosStatus } from '../data/sosRequests'
+
+const basemapTiles: Record<BasemapKey, string> = {
+  map: environment.map.streetTileUrl,
+  satellite: environment.map.tileUrl,
+}
+const minimumMiniMapZoom = 11
 
 interface SosRequestDetailDialogProps {
   request: SosRequest
@@ -21,6 +28,68 @@ function statusClasses(status: SosStatus) {
   if (status === 'Resolved') return 'border-emerald-400/30 bg-emerald-400/10 text-emerald-200'
   if (status === 'Coming') return 'border-sky-400/30 bg-sky-400/10 text-sky-100'
   return 'border-rose-400/30 bg-rose-500/10 text-rose-100'
+}
+
+function SosLocationMap({ request }: { request: SosRequest }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<maplibregl.Map | null>(null)
+  const [basemap, setBasemap] = useState<BasemapKey>('map')
+  const [isReady, setIsReady] = useState(false)
+  const [mapInstance, setMapInstance] = useState<maplibregl.Map | null>(null)
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+    const map = new maplibregl.Map({
+      attributionControl: false,
+      center: toLngLat(request.coordinates),
+      container,
+      doubleClickZoom: true,
+      dragPan: true,
+      keyboard: true,
+      maxZoom: environment.map.maxZoom,
+      minZoom: minimumMiniMapZoom,
+      scrollZoom: true,
+      style: createRasterStyle(environment.map.streetTileUrl, environment.map.streetAttribution, environment.map.maxZoom),
+      touchZoomRotate: true,
+      zoom: 16,
+    })
+    mapRef.current = map
+    setMapInstance(map)
+    setIsReady(false)
+    let locationLabel: maplibregl.Marker | undefined
+
+    map.on('load', () => {
+      setGeoJsonData(map, 'sos-location', {
+        features: [{ geometry: { coordinates: [request.coordinates[1], request.coordinates[0]], type: 'Point' }, properties: {}, type: 'Feature' }],
+        type: 'FeatureCollection',
+      })
+      map.addLayer({
+        id: 'sos-location-marker', source: 'sos-location', type: 'circle',
+        paint: { 'circle-color': '#f43f5e', 'circle-opacity': 1, 'circle-radius': 9, 'circle-stroke-color': '#fff1f2', 'circle-stroke-width': 2 },
+      } as maplibregl.CircleLayerSpecification)
+      const element = document.createElement('span')
+      element.className = 'islasafe-map-label islasafe-map-label--pin'
+      element.textContent = request.location
+      locationLabel = new maplibregl.Marker({ anchor: 'bottom', element, offset: [0, -12] }).setLngLat(toLngLat(request.coordinates)).addTo(map)
+      setIsReady(true)
+      window.requestAnimationFrame(() => map.resize())
+    })
+
+    return () => {
+      locationLabel?.remove()
+      map.remove()
+      mapRef.current = null
+      setMapInstance(null)
+    }
+  }, [request])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (map && isReady) updateRasterTiles(map, basemapTiles[basemap])
+  }, [basemap, isReady])
+
+  return <div aria-label={`Map location for ${request.location}`} className="relative h-44 w-full" role="application"><div className="islasafe-map h-full w-full" ref={containerRef} /><BasemapToggle onChange={setBasemap} value={basemap} /><MapZoomControls map={mapInstance} ready={isReady} /></div>
 }
 
 export function SosRequestDetailDialog({ request, onClose, onUpdateStatus }: SosRequestDetailDialogProps) {
@@ -44,7 +113,7 @@ export function SosRequestDetailDialog({ request, onClose, onUpdateStatus }: Sos
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-5 sm:p-6">
           <section className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.035] p-4"><span className={`grid size-11 shrink-0 place-items-center rounded-xl ${request.color}`}><Icon className="size-5" /></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-start justify-between gap-2"><div><h3 className="text-sm font-semibold text-white">{request.name}</h3><p className="mt-1 flex items-center gap-1.5 text-xs text-slate-400"><Phone className="size-3.5" /> {request.contact}</p></div><span className={`rounded-full border px-2.5 py-1 text-[10px] font-bold ${priorityClasses(request.priority)}`}>{request.priority} priority</span></div></div></section>
 
-          <section className="overflow-hidden rounded-xl border border-white/10"><div className="flex items-center justify-between border-b border-white/8 bg-white/[0.025] px-3.5 py-2.5"><h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-slate-300"><MapPin className="size-4 text-indigo-300" /> Exact location</h3><span className="font-mono text-[9px] text-slate-500">GIS position</span></div><MapContainer key={request.id} attributionControl={false} center={request.coordinates} className="islasafe-map h-44 w-full" scrollWheelZoom={false} zoom={16} zoomControl={false}><TileLayer attribution={environment.map.streetAttribution} maxZoom={environment.map.maxZoom} url={environment.map.streetTileUrl} /><CircleMarker center={request.coordinates} pathOptions={{ color: '#fff1f2', fillColor: '#f43f5e', fillOpacity: 1, weight: 2 }} radius={9}><Tooltip direction="top" permanent>{request.location}</Tooltip></CircleMarker></MapContainer><div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/8 bg-white/[0.025] px-3.5 py-2.5"><span className="text-xs text-slate-300">{request.location}</span><span className="font-mono text-[9px] text-slate-500">{request.coordinates[0].toFixed(5)} N, {request.coordinates[1].toFixed(5)} E</span></div></section>
+          <section className="overflow-hidden rounded-xl border border-white/10"><div className="flex items-center justify-between border-b border-white/8 bg-white/[0.025] px-3.5 py-2.5"><h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-slate-300"><MapPin className="size-4 text-indigo-300" /> Exact location</h3><span className="font-mono text-[9px] text-slate-500">GIS position</span></div><SosLocationMap key={request.id} request={request} /><div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/8 bg-white/[0.025] px-3.5 py-2.5"><span className="text-xs text-slate-300">{request.location}</span><span className="font-mono text-[9px] text-slate-500">{request.coordinates[0].toFixed(5)} N, {request.coordinates[1].toFixed(5)} E</span></div></section>
 
           <section className="grid gap-3 sm:grid-cols-2"><div className="rounded-xl border border-white/8 bg-white/[0.025] p-3"><p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-500"><UserRound className="size-3.5" /> SOS category</p><p className="mt-2 text-xs font-semibold text-slate-100">{request.category}</p><p className="mt-1 text-[10px] text-slate-500">{request.type}</p></div><div className="rounded-xl border border-white/8 bg-white/[0.025] p-3"><p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-500"><Clock3 className="size-3.5" /> Time received</p><p className="mt-2 text-xs font-semibold text-slate-100">{request.received}</p></div></section>
 

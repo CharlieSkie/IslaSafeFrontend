@@ -22,7 +22,7 @@ This installs the main application dependencies:
 - React and React DOM
 - Vite and TypeScript
 - Tailwind CSS
-- Leaflet and React Leaflet for map views
+- MapLibre GL JS for interactive map views
 - Lucide React for icons
 - Oxlint for linting
 

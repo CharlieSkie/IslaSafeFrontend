@@ -27,6 +27,7 @@ export const environment = Object.freeze({
     attribution: readEnvironmentValue('VITE_MAP_ATTRIBUTION'),
     maxZoom: readNumber('VITE_MAP_MAX_ZOOM', 19),
     provider: readEnvironmentValue('VITE_MAP_PROVIDER'),
+    tileProvider: readEnvironmentValue('VITE_MAP_TILE_PROVIDER'),
     streetAttribution: readEnvironmentValue('VITE_MAP_STREETS_ATTRIBUTION'),
     streetTileUrl: replaceMapKey(readEnvironmentValue('VITE_MAP_STREETS_TILE_URL'), mapApiKey),
     tileUrl: replaceMapKey(readEnvironmentValue('VITE_MAP_TILE_URL'), mapApiKey),
