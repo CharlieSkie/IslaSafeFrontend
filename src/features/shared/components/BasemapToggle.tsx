@@ -16,7 +16,7 @@ export function BasemapToggle({ onChange, value }: BasemapToggleProps) {
     </div>
   )
 }
-
+// map
 interface MapZoomControlsProps {
   map: MapLibreMap | null
   ready: boolean
