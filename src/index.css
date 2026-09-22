@@ -212,6 +212,72 @@
   @apply rounded-2xl border border-white/[0.09] bg-white/[0.045] shadow-2xl shadow-black/20 backdrop-blur-xl;
 }
 
+.auth-panel {
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, rgb(30 35 50 / 0.96), rgb(14 18 29 / 0.96));
+  box-shadow: 0 26px 70px rgb(0 0 0 / 0.35), inset 0 1px 0 rgb(255 255 255 / 0.05);
+  backdrop-filter: blur(22px);
+}
+
+/* One visual token set for every authentication input, including browser autofill. */
+.auth-input {
+  --auth-input-background: #1b1e25;
+  --auth-input-focus-background: #202532;
+  --auth-input-border: rgb(255 255 255 / 0.12);
+  --auth-input-focus-border: rgb(129 140 248 / 0.7);
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--auth-input-background) !important;
+  border-color: var(--auth-input-border) !important;
+  color: #f1f5f9 !important;
+  outline: none !important;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.auth-input:hover,
+.auth-input:placeholder-shown {
+  background-color: var(--auth-input-background) !important;
+  border-color: var(--auth-input-border) !important;
+  outline: none !important;
+}
+
+.auth-input:focus,
+.auth-input:focus-visible,
+.auth-input:active {
+  background-color: var(--auth-input-focus-background) !important;
+  border-color: var(--auth-input-focus-border) !important;
+  outline: none !important;
+}
+
+.auth-input:-webkit-autofill,
+.auth-input:-webkit-autofill:hover,
+.auth-input:-webkit-autofill:active,
+.auth-input:-moz-autofill,
+.auth-input:-moz-autofill:hover,
+.auth-input:-moz-autofill:active,
+.auth-input:autofill,
+.auth-input:autofill:hover,
+.auth-input:autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--auth-input-background) inset !important;
+  box-shadow: 0 0 0 1000px var(--auth-input-background) inset !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  background-color: var(--auth-input-background) !important;
+  border-color: var(--auth-input-border) !important;
+  caret-color: #f1f5f9;
+  outline: none !important;
+  transition: none !important;
+}
+
+.auth-input:-webkit-autofill:focus,
+.auth-input:-moz-autofill:focus,
+.auth-input:autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--auth-input-focus-background) inset !important;
+  box-shadow: 0 0 0 1000px var(--auth-input-focus-background) inset !important;
+  background-color: var(--auth-input-focus-background) !important;
+  border-color: var(--auth-input-focus-border) !important;
+}
+
 .action-button,
 .action-button-primary,
 .filter-chip {
