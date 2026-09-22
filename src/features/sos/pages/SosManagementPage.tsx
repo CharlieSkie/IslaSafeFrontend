@@ -40,7 +40,7 @@ export function SosManagementPage({ requests, selectedRequestId, onClearSelected
       </div>
       <TableFrame ariaLabel="SOS request queue" className="data-table--comfortable data-table--modern data-table--readable data-table--soft-corners data-table--scrollable mx-auto max-w-[1320px]" tableClassName="min-w-[1080px] table-fixed">
         <caption className="sr-only">SOS requests from residents</caption>
-        <colgroup><col className="w-[132px]" /><col className="w-[205px]" /><col className="w-[185px]" /><col className="w-[175px]" /><col className="w-[110px]" /><col className="w-[120px]" /><col className="w-[126px]" /><col className="w-[132px]" /></colgroup>
+        <colgroup><col className="w-[132px]" /><col className="w-[205px]" /><col className="w-[185px]" /><col className="w-[175px]" /><col className="w-[142px]" /><col className="w-[120px]" /><col className="w-[126px]" /><col className="w-[132px]" /></colgroup>
         <thead className="portal-table"><tr><th>SOS ID</th><th>Resident</th><th>Barangay / Purok</th><th>Request</th><th>Priority</th><th>Time</th><th>Status</th><th className="data-table__action text-right">Action</th></tr></thead>
         <tbody className="portal-table">
           {visibleRequests.map((request) => <tr className="data-table__row" key={request.id}>
@@ -48,7 +48,7 @@ export function SosManagementPage({ requests, selectedRequestId, onClearSelected
             <td><p className="font-semibold text-slate-100">{request.name}</p><p className="mt-1 font-mono text-[10px] text-slate-500">{request.contact}</p></td>
             <td className="leading-5 text-slate-200">{request.location}</td>
             <td><p className="font-medium text-slate-200">{request.type}</p><p className="mt-1 text-[10px] text-slate-500">{request.category}</p></td>
-            <td><StatusPill tone={statusTone(request.priority)}>{request.priority}</StatusPill></td>
+            <td className="whitespace-nowrap"><StatusPill tone={statusTone(request.priority)}>{request.priority}</StatusPill></td>
             <td className="font-mono text-[10px] text-slate-400">{request.received}</td>
             <td><StatusPill tone={statusTone(request.status)}>{request.status}</StatusPill></td>
             <td className="data-table__action text-right"><button aria-label={`View ${request.id} details`} className="whitespace-nowrap rounded-lg border border-indigo-400/25 bg-indigo-500/10 px-3 py-2 text-[10px] font-semibold text-indigo-200 transition hover:border-indigo-300/45 hover:bg-indigo-500/20 hover:text-white" onClick={() => setTableSelectedId(request.id)} type="button">View details</button></td>

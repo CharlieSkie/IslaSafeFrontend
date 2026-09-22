@@ -6,8 +6,10 @@ import { BasemapToggle, type BasemapKey } from '../../shared/components/BasemapT
 import { createRasterStyle, toLngLat, toLngLatBounds } from '../../shared/utils/maplibre'
 import type { EvacuationCenter, MapPosition } from '../data/evacuationCenters'
 
-const centerBounds: [MapPosition, MapPosition] = [[10.055, 124.495], [10.145, 124.625]]
-const minimumCenterMapZoom = 11
+// Covers the full Pitogo/CPG island area while keeping the picker focused on the municipality.
+const pitogoIslandBounds: [MapPosition, MapPosition] = [[10.015, 124.455], [10.175, 124.665]]
+const islandOverviewZoom = 11
+const minimumCenterMapZoom = 10
 const basemaps: Record<BasemapKey, { attribution: string; url: string }> = {
   map: { attribution: environment.map.streetAttribution, url: environment.map.streetTileUrl },
   satellite: { attribution: environment.map.attribution, url: environment.map.tileUrl },
@@ -41,13 +43,13 @@ function LocationPickerMap({ expanded, label, location, onExpandedChange, onPick
       doubleClickZoom: true,
       dragPan: true,
       keyboard: true,
-      maxBounds: toLngLatBounds(centerBounds),
+      maxBounds: toLngLatBounds(pitogoIslandBounds),
       maxZoom: environment.map.maxZoom,
       minZoom: minimumCenterMapZoom,
       scrollZoom: true,
       style: createRasterStyle(environment.map.streetTileUrl, environment.map.streetAttribution, environment.map.maxZoom),
       touchZoomRotate: true,
-      zoom: 13,
+      zoom: islandOverviewZoom,
     })
     mapRef.current = map
     const resizeObserver = new ResizeObserver(() => map.resize())
